@@ -33,6 +33,18 @@ li:hover {
 
 .lineNumber {
   color: lightgray;
-  padding: 1em;
-  font-size: .75em;
+  padding-right: 1em;
+  font-size: .8em;
 }
+
+footer {
+  margin-top: 5em;
+  background-color: lightgray;
+  width: 100vw;
+  text-align: center;
+}
+
+.Instructions {
+  width:30em;
+}
+
