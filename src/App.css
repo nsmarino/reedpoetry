@@ -52,3 +52,13 @@ footer {
   width:30em;
 }
 
+.hover {
+  visibility: hidden;
+  font-style: italic;
+  color: lightgray;
+}
+
+.poemLine:hover > .hover {
+  visibility: visible;
+}
+

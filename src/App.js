@@ -8,7 +8,7 @@ import Instructions from './components/Instructions'
 import Poem from './components/Poem'
 import Archives from './components/Archives'
 
-const generateId = () => Math.floor(Math.random() * 1000)
+const generateId = () => Math.floor(Math.random() * 10000)
 
 //copypasted from stackoverflow
 function romanize (num) {
@@ -26,7 +26,7 @@ function romanize (num) {
 }
 
 const firstLines = [
-  'The art of losing isn’t hard to master',
+  { line: 'The art of losing isn’t hard to master', author: 'Elizabeth Bishop' },
   'When, in disgrace with fortune and men’s eyes',
   'Coming by evening through the wintry city',
   'Exultation is the going of an inland soul to sea',
@@ -50,7 +50,7 @@ const poems = firstLines.map(line => {
   let poemObj = {
     title: romanize(firstLines.indexOf(line) + 1),
     content: [line],
-    id: generateId()
+    id: generateId(),
   }
   return poemObj
 })
@@ -59,7 +59,16 @@ function App() {
   const [index, setIndex] = useState(0)
   const [currentPoem, setCurrentPoem] = useState(poems[index])
   const [newLine, setNewLine] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
   const [archivePoems, setArchivePoems] = useState([])
+
+  // user will populate contributions with ids of poems
+  // kept in local storage
+  // can only submit if has not already submitted, tracked here
+  // const [contributions, setContributions] = useState([])
+  // useEffect(() => {
+  //   setContributions()
+  // }, [])
 
   useEffect(() => {
     setCurrentPoem(poems[index])
@@ -68,6 +77,8 @@ function App() {
   const handleSubmit = e => {
     e.preventDefault()
     if (newLine === '') return
+
+    // work on this next
     if (currentPoem.content.length === 9) {
       const completedPoem = {...currentPoem, content: currentPoem.content.concat(newLine)} 
       setArchivePoems(archivePoems.concat(completedPoem))
@@ -75,12 +86,18 @@ function App() {
       setIndex(newIndex)
       setNewLine('')
     }
-    setCurrentPoem({...currentPoem, content: currentPoem.content.concat(newLine)})
+    const testLine = {line: newLine, author: newAuthor}
+    setCurrentPoem({...currentPoem, content: currentPoem.content.concat(testLine)})
     setNewLine('')
+    setNewAuthor('')
   }
 
   const handleChange= e => {
     setNewLine(e.target.value)
+  }
+
+  const handleAuthorChange = e => {
+    setNewAuthor(e.target.value)
   }
 
   return (
@@ -89,8 +106,10 @@ function App() {
       <Poem
         poem={currentPoem}
         handleSubmit={handleSubmit}
-        value={newLine}
+        lineValue={newLine}
+        authorValue={newAuthor}
         handleChange={handleChange}
+        handleAuthorChange={handleAuthorChange}
       />
       <Instructions />
       <Archives poems={archivePoems} />

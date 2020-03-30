@@ -1,26 +1,50 @@
 import React from 'react'
 
-const Poem = ({poem, handleSubmit, value, handleChange}) => {
+const Poem = ({poem, handleSubmit, lineValue, authorValue, handleChange, handleAuthorChange}) => {
+
+  const lines = () => {
+      const array = []
+      for (let i=0;i<10;i++) {
+        if (poem.content[i]) {
+            const obj = {number: i+ 1, line: poem.content[i].line, author: poem.content[i].author}
+            array.push(obj)
+        } else {
+            array.push({number: i+1})
+        }
+      }
+    //   return array
+    return array.map(line => 
+        <p className='poemLine'><span className='lineNumber'>{line.number}</span>{line.line || ''} <span className='hover'>{line.author || ''}</span></p>
+      )
+  }
     return (
     <div>
     <h2>{`${poem.title}.`}</h2>
         <div className='poem'>
-        <p><span className='lineNumber'>1</span>{poem.content[0] || ''}</p>
-        <p><span className='lineNumber'>2</span>{poem.content[1] || ''}</p>
-        <p><span className='lineNumber'>3</span>{poem.content[2] || ''}</p>
-        <p><span className='lineNumber'>4</span>{poem.content[3] || ''}</p>
-        <p><span className='lineNumber'>5</span>{poem.content[4] || ''}</p>
-        <p><span className='lineNumber'>6</span>{poem.content[5] || ''}</p>
-        <p><span className='lineNumber'>7</span>{poem.content[6] || ''}</p>
-        <p><span className='lineNumber'>8</span>{poem.content[7] || ''}</p>
-        <p><span className='lineNumber'>9</span>{poem.content[8] || ''}</p>
-        <p><span className='lineNumber'>10</span>{poem.content[9] || ''}</p>
+        {lines()}
+        {/* <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[0].line || ''} <span className='hover'>{poem.content[0].author || ''}</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[1] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[2] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[3] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[4] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[5] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[6] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[7] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[8] || ''} <span className='hover'>hoverState</span></p>
+        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[9] || ''} <span className='hover'>hoverState</span></p> */}
         </div>
 
     <form onSubmit={handleSubmit}>
+        What should the next line be?
         <input 
-        value={value}
+        value={lineValue}
         onChange={handleChange}
+        />
+        <br/>
+        your name:
+        <input 
+        value={authorValue}
+        onChange={handleAuthorChange}
         />
         <button>add line</button>
     </form>
