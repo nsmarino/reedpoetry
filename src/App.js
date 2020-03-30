@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 
 // COMPONENTS
@@ -8,7 +8,23 @@ import Instructions from './components/Instructions'
 import Poem from './components/Poem'
 import Archives from './components/Archives'
 
-// const generateId = () => Math.floor(Math.random() * 1000)
+const generateId = () => Math.floor(Math.random() * 1000)
+
+//copypasted from stackoverflow
+function romanize (num) {
+  if (isNaN(num))
+      return NaN;
+  var digits = String(+num).split(""),
+      key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+             "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+             "","I","II","III","IV","V","VI","VII","VIII","IX"],
+      roman = "",
+      i = 3;
+  while (i--)
+      roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+  return Array(+digits.join("") + 1).join("M") + roman;
+}
+
 const firstLines = [
   'The art of losing isn’t hard to master',
   'When, in disgrace with fortune and men’s eyes',
@@ -29,30 +45,42 @@ const firstLines = [
   'These decibels are a kind of flagellation',
   'Had we but world enough, and time,',
 ]
-const sampleArchivePoem = {
-  title: 'II.',
-  content: ['how are you today', 'i saw your friends band play']
-}
+
+const poems = firstLines.map(line => {
+  let poemObj = {
+    title: romanize(firstLines.indexOf(line) + 1),
+    content: [line],
+    id: generateId()
+  }
+  return poemObj
+})
 
 function App() {
-  const [currentPoem, setCurrentPoem] = useState([firstLines[0]])
+  const [index, setIndex] = useState(0)
+  const [currentPoem, setCurrentPoem] = useState(poems[index])
   const [newLine, setNewLine] = useState('')
-  const [archivePoems, setArchivePoems] = useState([sampleArchivePoem])
+  const [archivePoems, setArchivePoems] = useState([])
+
+  useEffect(() => {
+    setCurrentPoem(poems[index])
+  }, [index])
 
   const handleSubmit = e => {
     e.preventDefault()
-    if (currentPoem.length === 10) {
-      console.log('not today sicko')
-      return
+    if (newLine === '') return
+    if (currentPoem.content.length === 9) {
+      const completedPoem = {...currentPoem, content: currentPoem.content.concat(newLine)} 
+      setArchivePoems(archivePoems.concat(completedPoem))
+      const newIndex = index === poems.length - 1 ? 0 : index + 1
+      setIndex(newIndex)
+      setNewLine('')
     }
-    setCurrentPoem(currentPoem.concat(newLine))
+    setCurrentPoem({...currentPoem, content: currentPoem.content.concat(newLine)})
     setNewLine('')
-    console.log(currentPoem)
   }
 
   const handleChange= e => {
     setNewLine(e.target.value)
-    console.log(newLine)
   }
 
   return (
@@ -74,9 +102,6 @@ function App() {
 export default App;
 
 // TO DO (frontend):
-// push current poem to archives once array.length = 10;
-// set new current poem using next first line from array;
-// loop through array if completed;
 // eventually change submitted lines to object that include name of author
 // react router for poem, instructions and archive
 // css throughout
