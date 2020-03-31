@@ -8,29 +8,18 @@ import Instructions from './components/Instructions'
 import Poem from './components/Poem'
 import Archives from './components/Archives'
 
-const generateId = () => Math.floor(Math.random() * 10000)
+// SERVICES
+import poemService from './services/poemService'
 
-//copypasted from stackoverflow
-function romanize (num) {
-  if (isNaN(num))
-      return NaN;
-  var digits = String(+num).split(""),
-      key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
-             "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
-             "","I","II","III","IV","V","VI","VII","VIII","IX"],
-      roman = "",
-      i = 3;
-  while (i--)
-      roman = (key[+digits.pop() + (i * 10)] || "") + roman;
-  return Array(+digits.join("") + 1).join("M") + roman;
-}
+// UTILS
+import romanize from './utils/romanize'
+import generateId from './utils/generateId'
 
 const firstLines = [
   { line: 'The art of losing isn’t hard to master', author: 'Elizabeth Bishop' },
-  'When, in disgrace with fortune and men’s eyes',
-  'Coming by evening through the wintry city',
-  'Exultation is the going of an inland soul to sea',
-  'You can get there from here, though there’s no going home.',
+  { line: 'When, in disgrace with fortune and men’s eyes', author: 'William Shakespeare' },
+  {line: 'Exultation is the going of an inland soul to sea', author: 'Emily Dickinson'},
+  {line: 'You can get there from here, though there’s no going home.', author: 'Natasha Trethewey'},
   'Go and catch a falling star',
   'I wandered lonely as a cloud',
   'Shall I compare thee to a summer’s day?',
@@ -71,23 +60,39 @@ function App() {
   // }, [])
 
   useEffect(() => {
+    // populate archivePoems with all poems whose archived value is true
+    // populate currentPoem with any poem whose archived value is false || line from index
+    poemService
+      .getAll()
+      .then(poems => {
+        console.log(poems.filter(poem => poem.archived === true))
+        console.log(poems.filter(poem => poem.archived !== true))
+        const currentPoem = poems.filter(poem => poem.archived !== true)
+        currentPoem ? setCurrentPoem(currentPoem[0]) : setCurrentPoem(poems[index])
+
+      })
+  }, [])
+
+  useEffect(() => {
     setCurrentPoem(poems[index])
   }, [index])
 
   const handleSubmit = e => {
     e.preventDefault()
-    if (newLine === '') return
+    if (newLine === '' || newAuthor === '') return
 
     // work on this next
     if (currentPoem.content.length === 9) {
-      const completedPoem = {...currentPoem, content: currentPoem.content.concat(newLine)} 
+      const contribution = {line: newLine, author: newAuthor}
+      const completedPoem = {...currentPoem, content: currentPoem.content.concat(contribution)} 
+      console.log(completedPoem)
       setArchivePoems(archivePoems.concat(completedPoem))
       const newIndex = index === poems.length - 1 ? 0 : index + 1
       setIndex(newIndex)
       setNewLine('')
     }
-    const testLine = {line: newLine, author: newAuthor}
-    setCurrentPoem({...currentPoem, content: currentPoem.content.concat(testLine)})
+    const contribution = {line: newLine, author: newAuthor}
+    setCurrentPoem({...currentPoem, content: currentPoem.content.concat(contribution)})
     setNewLine('')
     setNewAuthor('')
   }
@@ -120,8 +125,8 @@ function App() {
 
 export default App;
 
-// TO DO (frontend):
-// eventually change submitted lines to object that include name of author
-// react router for poem, instructions and archive
-// css throughout
-// footer content
+// today:
+// change submitted lines to object that include name of author
+
+// tomorrow: backend
+// day after: css, react router, fine tune and publish
