@@ -1,7 +1,8 @@
 import React from 'react'
 
 const Poem = ({poem, handleSubmit, lineValue, authorValue, handleChange, handleAuthorChange}) => {
-
+  if (!poem) return (<div>Please visit the archives to see all completed poems.</div>)
+  
   const lines = () => {
       const array = []
       for (let i=0;i<10;i++) {
@@ -22,16 +23,6 @@ const Poem = ({poem, handleSubmit, lineValue, authorValue, handleChange, handleA
     <h2>{`${poem.title}.`}</h2>
         <div className='poem'>
         {lines()}
-        {/* <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[0].line || ''} <span className='hover'>{poem.content[0].author || ''}</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[1] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[2] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[3] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[4] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[5] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[6] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[7] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[8] || ''} <span className='hover'>hoverState</span></p>
-        <p className='poemLine'><span className='lineNumber'>1</span>{poem.content[9] || ''} <span className='hover'>hoverState</span></p> */}
         </div>
 
     <form onSubmit={handleSubmit}>

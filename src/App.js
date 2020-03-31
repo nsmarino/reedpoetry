@@ -35,10 +35,10 @@ const firstLines = [
   'Had we but world enough, and time,',
 ]
 
-const poems = firstLines.map(line => {
+const starterPoems = firstLines.map(li => {
   let poemObj = {
-    title: romanize(firstLines.indexOf(line) + 1),
-    content: [line],
+    title: romanize(firstLines.indexOf(li) + 1),
+    content: [li],
     id: generateId(),
   }
   return poemObj
@@ -46,7 +46,7 @@ const poems = firstLines.map(line => {
 
 function App() {
   const [index, setIndex] = useState(0)
-  const [currentPoem, setCurrentPoem] = useState(poems[index])
+  const [currentPoem, setCurrentPoem] = useState(starterPoems[index])
   const [newLine, setNewLine] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [archivePoems, setArchivePoems] = useState([])
@@ -60,39 +60,62 @@ function App() {
   // }, [])
 
   useEffect(() => {
-    // populate archivePoems with all poems whose archived value is true
-    // populate currentPoem with any poem whose archived value is false || line from index
     poemService
       .getAll()
-      .then(poems => {
-        console.log(poems.filter(poem => poem.archived === true))
-        console.log(poems.filter(poem => poem.archived !== true))
-        const currentPoem = poems.filter(poem => poem.archived !== true)
-        currentPoem ? setCurrentPoem(currentPoem[0]) : setCurrentPoem(poems[index])
-
+      .then(poems => {  
+        // set archive to all completed poems 
+        setArchivePoems(poems.filter(poem => poem.archived === true))
+        // set currentPoem to first returned poem with archived: false
+        const currentPoem = poems.find(poem => poem.archived !== true)
+        currentPoem ?
+          setCurrentPoem(currentPoem)
+          :
+          setCurrentPoem(starterPoems[0])
       })
   }, [])
-
+  
   useEffect(() => {
-    setCurrentPoem(poems[index])
-  }, [index])
+       poemService
+         .getAll()
+         .then(poems => {
+           setCurrentPoem(poems.find(poem => poem.archived !== true)) 
+         })
+  }, [archivePoems])
+
+  // useEffect(() => {
+  //   // will need to expand to make api call
+  //   setCurrentPoem(poems[index])
+  // }, [index])
 
   const handleSubmit = e => {
     e.preventDefault()
     if (newLine === '' || newAuthor === '') return
 
-    // work on this next
+    // if poem completed:
     if (currentPoem.content.length === 9) {
       const contribution = {line: newLine, author: newAuthor}
-      const completedPoem = {...currentPoem, content: currentPoem.content.concat(contribution)} 
-      console.log(completedPoem)
-      setArchivePoems(archivePoems.concat(completedPoem))
-      const newIndex = index === poems.length - 1 ? 0 : index + 1
+      console.log('current poem', currentPoem)
+      const completedPoem = {
+        ...currentPoem, 
+        content: currentPoem.content.concat(contribution),
+        archived: true
+      }
+      poemService
+        .update(currentPoem.id, completedPoem)
+        .then(returnedPoem => {
+          setArchivePoems(archivePoems.concat(returnedPoem))
+        })
+      const newIndex = index === starterPoems.length - 1 ? 0 : index + 1
       setIndex(newIndex)
       setNewLine('')
+      setNewAuthor('')
     }
+    // if poem not yet completed:
     const contribution = {line: newLine, author: newAuthor}
-    setCurrentPoem({...currentPoem, content: currentPoem.content.concat(contribution)})
+    const updatedPoem = {...currentPoem, content: currentPoem.content.concat(contribution)}
+    poemService
+      .update(currentPoem.id, updatedPoem)
+      .then(returnedPoem => setCurrentPoem(returnedPoem))
     setNewLine('')
     setNewAuthor('')
   }
@@ -126,7 +149,8 @@ function App() {
 export default App;
 
 // today:
-// change submitted lines to object that include name of author
+// integrate frontend and backend
+// react router
+// styled components
 
-// tomorrow: backend
-// day after: css, react router, fine tune and publish
+// tomorrow: testing, deploy via netlify and mongoDB Atlas
