@@ -12,45 +12,16 @@ import Archives from './components/Archives'
 import poemService from './services/poemService'
 
 // UTILS
-import romanize from './utils/romanize'
-import generateId from './utils/generateId'
-
-const firstLines = [
-  { line: 'The art of losing isn’t hard to master', author: 'Elizabeth Bishop' },
-  { line: 'When, in disgrace with fortune and men’s eyes', author: 'William Shakespeare' },
-  {line: 'Exultation is the going of an inland soul to sea', author: 'Emily Dickinson'},
-  {line: 'You can get there from here, though there’s no going home.', author: 'Natasha Trethewey'},
-  'Go and catch a falling star',
-  'I wandered lonely as a cloud',
-  'Shall I compare thee to a summer’s day?',
-  '’Twas brillig, and the slithy toves',
-  'Midway upon the journey of our life',
-  'Whose woods these are I think I know.',
-  'Much have I travelled in the realms of gold,',
-  "Sing, goddess, of Achilles' ruinous anger",
-  "Let us go then, you and I,",
-  'Stop all the clocks, cut off the telephone,',
-  'So worn with passing through the bars,',
-  'These decibels are a kind of flagellation',
-  'Had we but world enough, and time,',
-]
-
-const starterPoems = firstLines.map(li => {
-  let poemObj = {
-    title: romanize(firstLines.indexOf(li) + 1),
-    content: [li],
-    id: generateId(),
-  }
-  return poemObj
-})
+// import romanize from './utils/romanize'
 
 function App() {
-  const [index, setIndex] = useState(0)
-  const [currentPoem, setCurrentPoem] = useState(starterPoems[index])
+  // const [index, setIndex] = useState(0)
+  const [currentPoem, setCurrentPoem] = useState(null)
   const [newLine, setNewLine] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [archivePoems, setArchivePoems] = useState([])
 
+  // STILL DECIDING WHETHER OR NOT TO ADD THIS FEATURE
   // user will populate contributions with ids of poems
   // kept in local storage
   // can only submit if has not already submitted, tracked here
@@ -59,21 +30,23 @@ function App() {
   //   setContributions()
   // }, [])
 
+  // on page load, sets archive to completed poems and sets currentPoem
   useEffect(() => {
     poemService
       .getAll()
       .then(poems => {  
-        // set archive to all completed poems 
         setArchivePoems(poems.filter(poem => poem.archived === true))
+
         // set currentPoem to first returned poem with archived: false
         const currentPoem = poems.find(poem => poem.archived !== true)
         currentPoem ?
           setCurrentPoem(currentPoem)
           :
-          setCurrentPoem(starterPoems[0])
+          setCurrentPoem(null)
       })
   }, [])
   
+  // fetches new poem object once a completed poem is added to archives
   useEffect(() => {
        poemService
          .getAll()
@@ -82,11 +55,7 @@ function App() {
          })
   }, [archivePoems])
 
-  // useEffect(() => {
-  //   // will need to expand to make api call
-  //   setCurrentPoem(poems[index])
-  // }, [index])
-
+  // three functions for managing Poem Form
   const handleSubmit = e => {
     e.preventDefault()
     if (newLine === '' || newAuthor === '') return
@@ -105,8 +74,11 @@ function App() {
         .then(returnedPoem => {
           setArchivePoems(archivePoems.concat(returnedPoem))
         })
-      const newIndex = index === starterPoems.length - 1 ? 0 : index + 1
-      setIndex(newIndex)
+
+      // this index state should no longer be necessary
+      // const newIndex = index === starterPoems.length - 1 ? 0 : index + 1
+      // setIndex(newIndex)
+
       setNewLine('')
       setNewAuthor('')
     }
@@ -119,11 +91,9 @@ function App() {
     setNewLine('')
     setNewAuthor('')
   }
-
   const handleChange= e => {
     setNewLine(e.target.value)
   }
-
   const handleAuthorChange = e => {
     setNewAuthor(e.target.value)
   }
@@ -148,9 +118,32 @@ function App() {
 
 export default App;
 
-// today:
-// integrate frontend and backend
-// react router
-// styled components
-
-// tomorrow: testing, deploy via netlify and mongoDB Atlas
+// sample content
+// const firstLines = [
+//   { line: 'The art of losing isn’t hard to master', author: 'Elizabeth Bishop' },
+//   { line: 'When, in disgrace with fortune and men’s eyes', author: 'William Shakespeare' },
+//   {line: 'Exultation is the going of an inland soul to sea', author: 'Emily Dickinson'},
+//   {line: 'You can get there from here, though there’s no going home.', author: 'Natasha Trethewey'},
+//   {line: 'Go and catch a falling star', author: 'John Donne'},
+//   {line: 'I wandered lonely as a cloud', author: 'William Wordsworth'},
+//   {line: 'Shall I compare thee to a summers day?', author: 'William Shakespeare'},
+//   {line: '’Twas brillig, and the slithy toves', author: 'Lewis Carroll'},
+//   {line: 'Midway upon the journey of our life', author: 'Dante'},
+//   {line: 'Whose woods these are I think I know', author: 'Robert Frost'},
+//   {line: 'Much have I travelled in the realms of gold,', author: 'John Keats'},
+//   {line: 'Sing, goddess, of Achilles ruinous anger', author: 'Homer'},
+//   {line: 'Let us go then, you and I,', author: 'TS Eliot'},
+//   {line: 'Stop all the clocks, cut off the telephone,', author: 'WH Auden'},
+//   {line: 'So worn with passing through the bars,', author: 'Rainer Maria Rilke'},
+//   {line: 'These decibels are a kind of flagellation', author: 'John Ashbery'},
+//   {line: 'Had we but world enough, and time,', author: 'Andrew Marvell'},
+//   {line: 'I have done it again.', author: 'Sylvia Plath'},
+// ]
+// const starterPoems = firstLines.map(li => {
+//   let poemObj = {
+//     title: romanize(firstLines.indexOf(li) + 1),
+//     content: [li],
+//     archived: false
+//   }
+//   return poemObj
+// })

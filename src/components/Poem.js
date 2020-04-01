@@ -1,4 +1,5 @@
 import React from 'react'
+import generateId from '../utils/generateId'
 
 const Poem = ({poem, handleSubmit, lineValue, authorValue, handleChange, handleAuthorChange}) => {
   if (!poem) return (<div>Please visit the archives to see all completed poems.</div>)
@@ -7,15 +8,15 @@ const Poem = ({poem, handleSubmit, lineValue, authorValue, handleChange, handleA
       const array = []
       for (let i=0;i<10;i++) {
         if (poem.content[i]) {
-            const obj = {number: i+ 1, line: poem.content[i].line, author: poem.content[i].author}
+            const obj = {number: i+ 1, line: poem.content[i].line, author: poem.content[i].author, id: poem.content[i]._id}
             array.push(obj)
         } else {
-            array.push({number: i+1})
+            array.push({number: i+1, id: generateId()})
         }
       }
     //   return array
     return array.map(line => 
-        <p className='poemLine'><span className='lineNumber'>{line.number}</span>{line.line || ''} <span className='hover'>{line.author || ''}</span></p>
+        <p className='poemLine' key={line.id}><span className='lineNumber'>{line.number}</span>{line.line || ''} <span className='hover'>{line.author || ''}</span></p>
       )
   }
     return (
