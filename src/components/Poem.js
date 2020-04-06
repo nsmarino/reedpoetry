@@ -26,19 +26,18 @@ const Poem = ({poem, handleSubmit, lineValue, authorValue, handleChange, handleA
         {lines()}
         </div>
 
-    <form onSubmit={handleSubmit}>
-        What should the next line be?
+    <form onSubmit={handleSubmit} className='form'>
+        <label>What should the next line be?</label>
         <input 
         value={lineValue}
         onChange={handleChange}
         />
-        <br/>
-        your name:
+        <label>Name</label>
         <input 
         value={authorValue}
         onChange={handleAuthorChange}
         />
-        <button>add line</button>
+        <button id="submitBtn">add line!</button>
     </form>
     </div>
 )}

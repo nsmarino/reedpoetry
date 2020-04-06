@@ -1,60 +1,68 @@
+/* GLOBAL */
+
 :root {
   --main-color: #222;
+  --off-color: #4eb562;
+  font-size: 16px;
 }
 
 .App {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--main-color);
 }
-h1 {
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--off-color)
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/*  HEADER */
+
+header {
   text-align: center;
   margin: auto;
 }
 
-ul {
-  display: flex;
-  justify-content: center;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+header a:hover, header a:focus,header a:active  {
+  text-decoration: none;
 }
 
-li {
-  text-align: center;
-  display: block;
-  border: 1px solid var(--main-color);
-  padding: 1em;
-  margin: 1em;
-  width: 15em;
+header p {
+  color: lightgray;
+  font-weight: normal;
+  font-variant: small-caps;
+  font-size: 1.25em;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+header h1 {
+  font-size: 2.5em;
+  margin-top: 0;
+  color: var(--main-color);
 }
 
-li:hover {
-  cursor: pointer;
-  background-color: var(--main-color);
-  color: white;
-}
 
+
+/* POEMS */
+.poem {
+  font-size: 1.25em;
+}
 .lineNumber {
   color: lightgray;
   padding-right: 1em;
   font-size: .8em;
 }
-
-footer {
-  margin-top: 5em;
-  background-color: lightgray;
-  width: 100vw;
-  text-align: center;
-}
-
-.Instructions {
-  width:30em;
-}
-
 .hover {
   visibility: hidden;
   font-style: italic;
+  font-variant: small-caps;
   color: lightgray;
 }
 
@@ -62,3 +70,52 @@ footer {
   visibility: visible;
 }
 
+.form {
+  display: flex;
+  font-size: 1.25em;
+  font-style: italic;
+  flex-direction: column;
+}
+
+input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border-radius: .25em;
+  box-sizing: border-box;
+}
+
+#submitBtn {
+  width: 7em;
+  padding: 1em;
+  background-color: var(--off-color);
+  /* border: none; */
+  border-radius: .25em;
+}
+
+#submitBtn:hover {
+  background-color: #B14A9D;
+}
+
+
+
+
+
+/* INSTRUCTIONS */
+.Instructions {
+  max-width: 30em;
+}
+
+.Instructions p {
+  font-size: 1.25em;
+}
+
+.archiveContainer {
+  margin: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.archiveContainer h3 {
+  font-size: 2em;
+}

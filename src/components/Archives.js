@@ -7,7 +7,7 @@ const Archives = ({poems}) => {
     return (
       <div>
         <h2>Archives</h2>
-        <p>← back</p>
+        <a href="/">← back</a>
         {showArchives()}
       </div>
     )

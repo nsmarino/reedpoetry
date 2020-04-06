@@ -1,15 +1,12 @@
 import React from 'react'
-
+import { NavLink } from 'react-router-dom'
 const Header = () => {
     return (
       <header>
-        <h1>Reed Library Collaborative Poetry</h1>
-        <nav>
-          <ul>
-            <li>instructions</li>
-            <li>see all poems</li>
-          </ul>
-        </nav>
+      <NavLink exact activeClassName="active" to="/">
+        <p>Reed Memorial Library Presents</p>
+        <h1>Collaborative Poetry</h1>
+        </NavLink>
       </header>
     )
   }

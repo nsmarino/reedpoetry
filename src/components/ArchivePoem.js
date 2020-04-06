@@ -7,9 +7,11 @@ const ArchivePoem = ({poem}) => {
     )
     
     return (
-    <div>
+    <div className="archiveContainer">
       <h3>{poem.title}.</h3>
+      <div className='poem'>
       {showLines()}
+      </div>
     </div>
     )
   }
